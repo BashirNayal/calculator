@@ -159,6 +159,7 @@ object Parsers {
       }
       else if (s(current) == 'e') res = res :+ Euler()
       else if(s(current) != ' '){
+        expecting_operand = false
         res = res :+ Variable(extract_variable_name(s.slice(current , s.length)))
         current += res.last.asInstanceOf[Variable].s.length - 1
       }

@@ -1,9 +1,7 @@
 package calculator
 
 import calculator.Parsers.{extractArgument, parse_string, shunting_yard, turn_to_RPN}
-
 abstract class CalcBase extends CALCULATOR {
-  type Base = Int
   var variables : Map[String , Expression] = Map()
   var functions : Map[String , Fun] = Map()
 
@@ -16,6 +14,13 @@ abstract class CalcBase extends CALCULATOR {
           val arg_expression = parse(arg._1)
           if(command.contains("=")) {
             functions += (command(0).toString -> Fun(parse(command.split("=")(1)) , command(2).toString))
+            val thread = new Thread {
+              override def run(): Unit = {
+                Plot.plot(functions(command(0).toString))
+              }
+            }
+            thread.start()
+
             ""
           }
           else {
@@ -28,17 +33,13 @@ abstract class CalcBase extends CALCULATOR {
         }
         case _ => {
           val RPN = parse(command)
-          evaluate(RPN).toString
+          evaluate(RPN).toString + " => " + evaluate(RPN).value.toString
         }
-
       }
-
     }
-//    println("RPN: " + RPN.toString)
   }
   def parse(command : String) : Expression = {
 
-    //    val shuntedExpression = shuntingYard(parser(command))
     val parsed = parse_string(command)
 //    println("Parsed :   " + parsed.mkString(" "))
     val shunted = shunting_yard(parsed)
@@ -60,7 +61,7 @@ abstract class CalcBase extends CALCULATOR {
       case Log(Operator(x , Op(sign) , y) , b) if sign == "/" || sign == "*" =>
         if(sign == "*") Operator(Log(x , b) , Op("+") , Log(y , b)) else Operator(Log(x , b) , Op("-") , Log(y , b))
       case Log(Exponent(x , y) , b) => Operator(y , Op("*") , Log(x , b))
-      case Exponent(x , y) => x^y match {
+      case Exponent(x , y) => evaluate(x)^evaluate(y) match {
         case Some(i) => i
         case None => Exponent(x , y)
       }

@@ -1,9 +1,8 @@
 package calculator
 
-
 abstract class Expression {
 //  def value : Int
-  def simplify : Expression = null
+  def value : Double
   def +(lhs : Expression) : Option[Expression] = None
   def -(lhs : Expression) : Option[Expression] = None
   def *(lhs : Expression) : Option[Expression] = None
@@ -11,9 +10,9 @@ abstract class Expression {
   def ^(lhs : Expression) : Option[Expression] = None
 }
 case class Symbol(s : String) extends Expression {
+  override def value: Double = ???
   override def toString: String = s
 //  override def value: Int = 0
-  override def simplify: Expression = null
 }
 
 case class Op(s : String) extends Expression {
@@ -39,26 +38,24 @@ case class Op(s : String) extends Expression {
     }
   }
 
-//  override def value: Int = 0
-  override def simplify: Expression = null
+  override def value: Double = ???
 }
 
 
 case class Negative(x : Expression) extends Expression {
-//  override def value: Int = -x.value
-  //    def without_negation : Expression = x
+  override def value: Double = -x.value
 
   override def toString: String = "-" + x.toString
 
-  override def simplify: Expression = Negative(x.simplify)
+
 }
 case class Euler() extends Expression {
-//  override def value: Int = 0 //TODO
+  override def value : Double = 2.71828
   override def toString : String = "e"
-  override def simplify: Expression = this
 }
 
-case class Constant(x : Int) extends Expression {
+case class Constant(x : Double) extends Expression {
+  override def value: Double = x
   override def toString: String = x.toString
   override def +(rhs : Expression) : Option[Expression] = rhs match {
     case Constant(y) => Some(Constant(x + y))
@@ -81,20 +78,15 @@ case class Constant(x : Int) extends Expression {
     case _ => None
   }
   override def ^(rhs : Expression) : Option[Expression] = rhs match {
-    case Constant(y) => {
-      var res = x
-      for(_ <- 1 until y) {
-        res *= x
-        if(res < 0) return None
-      }
-      Some(Constant(res))
-    }
+    case Constant(y) =>
+      Some(Constant(Math.pow(this.value , rhs.value)))
     case _ => None
   }
-//  override def value: Int = x
 }
 case class Variable(s : String) extends Expression {
   override def toString: String = s
+
+  override def value: Double = 0
 
 //  override def value: Int = 0//TODO
 }
@@ -113,12 +105,25 @@ case class Operator(lhs : Expression , op : Op , rhs : Expression) extends Expre
       case _ => lhs.toString + " " + op.toString + " " + rhs.toString
     }
   }
-//  override def value: Int = 0
+//  override def value : Double = Operator(Constant(lhs.value) , op , Constant(rhs.value))
+  override def value : Double = do_operation(lhs.value , op , rhs.value)
+
 //  override def simplify: Expression = this match {
 //    case Operator(Operator(lhs_l , op_l , rhs_l) , op , Operator(lhs_r , op_r , rhs_r)) if op.s == "*" && op_l.precedence == 2 && op_r.precedence == 2 =>
 //  }
+  def do_operation(lhs : Double, op : Op, rhs : Double): Double = {
+    op match {
+      case Op(x) if x == "+" => lhs + rhs
+      case Op(x) if x == "-" => lhs - rhs
+      case Op(x) if x == "*" => lhs * rhs
+      case Op(x) if x == "/" => lhs / rhs
+
+    }
+  }
 }
+
 case class Log(x : Expression , base : Expression = Constant(10)) extends Expression {
+  override def value: Double = Math.log10(x.value) / Math.log10(base.value)
   override def toString: String = {
 //    val b : String = if(base.value != 10) base.toString else ""
     "log" + base.toString + "(" + x.toString + ")"
@@ -144,9 +149,9 @@ case class Log(x : Expression , base : Expression = Constant(10)) extends Expres
   def base_switch : Expression = Fraction(Constant(1) , Log(base , x))
   def base_change(arg : Expression) : Expression = Fraction(Log(x , arg) , Log(base , arg))
 //  override def value: Int = 0
-  override def simplify: Expression = this
 }
 case class Ln(x : Expression) extends Expression {
+  override def value: Double = Math.log10(x.value) / Math.log10(Euler().value)
   //    override def +(rhs : Expression) : Expression = {
   //      Ln(Constant(999))
   //    }
@@ -154,7 +159,6 @@ case class Ln(x : Expression) extends Expression {
 
   override def toString: String = "ln(" + x + ")"
 
-  override def simplify: Expression = this
 }
 case class Fun(x : Expression , v : String) extends Expression {
 
@@ -164,35 +168,49 @@ case class Fun(x : Expression , v : String) extends Expression {
     calc.variables += (v -> exp)
     calc.evaluate(x)
   }
+
+  override def value: Double = ???
+
 //  override def value: Int = 0
-  override def simplify: Expression = ???
 }
 case class Exponent(x : Expression , power : Expression) extends Expression {
-   def value: Int = {
+  override def value: Double = Math.pow(x.value , power.value)
+
+  override def ^(rhs : Expression) : Option[Constant] = {
     x match {
       case Constant(b) => power match {
         case Constant(p) =>
-          var res = b
-          for(_ <- 0 until p) res = res + b
-          res
+          Some(Constant(Math.pow(x.value , rhs.value)))
 
       }
-      case _ => 0
+      case _ => None
     }
-
   }
+//   def value: Int = {
+//    x match {
+//      case Constant(b) => power match {
+//        case Constant(p) =>
+//          var res = b
+//          for(_ <- 0 until p) res = res + b
+//          res
+//
+//      }
+//      case _ => 0
+//    }
+//
+//  }
   override def toString: String = "(" + x.toString + ")" + "^" + power.toString
 
-  override def simplify: Expression = ???
 }
 case class Radical(x : Expression , root : Expression = Constant(2)) extends Expression {
-  override def toString: String = "√(" + x.toString + ")^(" + root.toString + ")"
+  override def toString: String = root.toString + "√(" + x.toString + ")"
 
-  override def simplify: Expression = ???
+  override def value: Double = ???
+
+
 }
 case class Sin(x : Expression) extends Expression {
-//  override def value: Int = 0
-  override def simplify: Expression = ???
+  override def value: Double = Math.sin(x.value)
 }
 case class Fraction(numerator : Expression , dominator : Expression) extends Expression {
   override def toString: String =  numerator.toString + " / " + dominator.toString
@@ -205,22 +223,21 @@ case class Fraction(numerator : Expression , dominator : Expression) extends Exp
     case _ => None
   }
 
-  override def simplify: Expression = ???
+
+  override def value: Double = numerator.value / dominator.value
+
 }
 case class Cos(x : Expression) extends  Expression {
-//  override def value: Int = 0
-  override def simplify: Expression = ???
+  override def value: Double = Math.cos(x.value)
 }
 case class Sec(x : Expression) extends Expression {
-//  override def value: Int = 0
-  override def simplify: Expression = ???
+  override def value: Double = 1/Math.cos(x.value)
 }
 case class Tan(x : Expression) extends Expression {
-//  override def value: Int = 0
-  override def simplify: Expression = ???
+  override def value: Double = Math.tan(x.value)
 }
 case class Pi() extends Expression {
   override def toString: String = "π"
+  override def value: Double = 3.141592653589793238
 
-  override def simplify: Expression = this
 }
