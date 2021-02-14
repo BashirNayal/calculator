@@ -170,10 +170,10 @@ object Parsers {
   }
   def extract_variable_name(s : String) : String = {
     var count = 0
-    while(count < s.length && s(count) != ' ') count += 1
+    while(count < s.length && s(count) != ' ' && !is_symbol(s(count))) count += 1
     s.slice(0 , count)
   }
-  def is_symbol(c : Char) : Boolean = c == '/' || c == '^' || c == '*' || c == '-' || c == '+' || c == ')' || c == '('
+  def is_symbol(c : Char) : Boolean = is_operator(c) || c == ')' || c == '('
 
   def turn_to_Array(s : String) : Array[String] = {
     var current = 0

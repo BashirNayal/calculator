@@ -164,6 +164,7 @@ case class Fun(x : Expression , v : String) extends Expression {
 
   override def toString: String =  x.toString
   def solve_for(exp : Expression) : Expression = {
+//    println(v + " -----  " + exp.toString)
     val calc = new CalcIntegral
     calc.variables += (v -> exp)
     calc.evaluate(x)

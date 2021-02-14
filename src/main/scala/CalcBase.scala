@@ -24,7 +24,10 @@ abstract class CalcBase extends CALCULATOR {
             ""
           }
           else {
-            functions(command(0).toString).solve_for(evaluate(arg_expression)).toString
+            command(0).toString + "(" + arg_expression.toString + ") = " +
+            functions(command(0).toString).solve_for(evaluate(arg_expression)).toString + " = " +
+            functions(command(0).toString).solve_for(evaluate(arg_expression)).value.toString
+
           }
         }
         case x if x.contains("=") => {
@@ -41,15 +44,18 @@ abstract class CalcBase extends CALCULATOR {
   def parse(command : String) : Expression = {
 
     val parsed = parse_string(command)
-//    println("Parsed :   " + parsed.mkString(" "))
+    println("Parsed :   " + parsed.mkString(" "))
     val shunted = shunting_yard(parsed)
-//    println("shunted :   " + shunted.mkString(" "))
+    println("shunted :   " + shunted.mkString(" "))
     val RPN = turn_to_RPN(shunted)
     RPN
   }
 
   def evaluate(exp : Expression) : Expression = {
     exp match {
+      case Sin(x) => Sin(evaluate(x))
+      case Cos(x) => Cos(evaluate(x))
+      case Tan(x) => Tan(evaluate(x))
       case Ln(x) if x.isInstanceOf[Euler] => Constant(1)
       case Log(x,y) if y.isInstanceOf[Euler] => Ln(x)
       case Log(x,y) => Log(evaluate(x) , evaluate(y))
