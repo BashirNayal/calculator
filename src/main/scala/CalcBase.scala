@@ -1,12 +1,14 @@
 package calculator
 
 import calculator.Parsers.{extractArgument, parse_string, shunting_yard, turn_to_RPN}
-abstract class CalcBase extends CALCULATOR {
+class CalcBase extends CALCULATOR {
   var variables : Map[String , Expression] = Map()
   var functions : Map[String , Fun] = Map()
 
-  override def readEval(command: String): String = {
+  def parse_function(s : String) = {
 
+  }
+  override def readEval(command: String): String = {
     try {
       command match {
         case x if x.length > 1 && x(0).isLetter && x(1) == '(' => {
@@ -14,13 +16,8 @@ abstract class CalcBase extends CALCULATOR {
           val arg_expression = parse(arg._1)
           if(command.contains("=")) {
             functions += (command(0).toString -> Fun(parse(command.split("=")(1)) , command(2).toString))
-            val thread = new Thread {
-              override def run(): Unit = {
-                Plot.plot(functions(command(0).toString))
-              }
-            }
-            thread.start()
 
+            Plot.plot(functions(command(0).toString))
             ""
           }
           else {
