@@ -51,12 +51,13 @@ class Window(f : Fun) extends PApplet {
   }
   def circle(p : Point , r : Float): Unit = ellipse(p.x , p.y , r , r)
   def draw_graph(f : Fun): Unit = {
+    fill(0)
     var i = 0
     val max = 1000
     var x = -500
     var arr = new Array[Point](max)
     while(i < max) {
-      arr(i) = Point(x.toFloat , f.solve_for(Constant(x)).value.toFloat)
+      arr(i) = Point(x.toFloat , f.solve_for_x(Constant(x)).value.toFloat)
       i += 1
       x += 1
     }

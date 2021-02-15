@@ -15,16 +15,18 @@ class CalcBase extends CALCULATOR {
           val arg   = extractArgument(x.slice(1 , x.length))
           val arg_expression = parse(arg._1)
           if(command.contains("=")) {
-            functions += (command(0).toString -> Fun(parse(command.split("=")(1)) , command(2).toString))
+            if(!functions.contains(command(0).toString))
+              functions += (command(0).toString -> Fun(parse(command.split("=")(1)) , command(2).toString))
+            else return command(2).toString + " = " + functions(command(0).toString).solve_for_y(parse(command.split("=")(1))).toString +
+              " = " + functions(command(0).toString).solve_for_y(parse(command.split("=")(1))).value.toString
 
             Plot.plot(functions(command(0).toString))
             ""
           }
           else {
             command(0).toString + "(" + arg_expression.toString + ") = " +
-            functions(command(0).toString).solve_for(evaluate(arg_expression)).toString + " = " +
-            functions(command(0).toString).solve_for(evaluate(arg_expression)).value.toString
-
+            functions(command(0).toString).solve_for_x(evaluate(arg_expression)).toString + " = " +
+            functions(command(0).toString).solve_for_x(evaluate(arg_expression)).value.toString
           }
         }
         case x if x.contains("=") => {
@@ -49,7 +51,21 @@ class CalcBase extends CALCULATOR {
   }
 
   def evaluate(exp : Expression) : Expression = {
+    var ex : Expression = exp
+    var temp = exp
+    ex = eval(exp)
+    while(temp != ex) {
+      temp = ex
+      ex = eval(ex)
+    }
+    ex
+
+  }
+  def eval(exp : Expression) : Expression = {
+    var temp : Expression = null
+
     exp match {
+      case Radical(Constant(0) , b) => Constant(0)
       case Sin(x) => Sin(evaluate(x))
       case Cos(x) => Cos(evaluate(x))
       case Tan(x) => Tan(evaluate(x))

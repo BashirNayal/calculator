@@ -163,11 +163,71 @@ case class Ln(x : Expression) extends Expression {
 case class Fun(x : Expression , v : String) extends Expression {
 
   override def toString: String =  x.toString
-  def solve_for(exp : Expression) : Expression = {
+  def solve_for_x(exp : Expression) : Expression = {
 //    println(v + " -----  " + exp.toString)
     val calc = new CalcBase
     calc.variables += (v -> exp)
     calc.evaluate(x)
+  }
+  def solve_for_y(exp : Expression): Expression = {
+    val calc = new CalcBase
+//    calc.variables += (v -> exp)
+//    println("solving for y: " + exp.toString + " = " + x.toString)
+    calc.evaluate(Fun(Operator(x , Op("-") , exp) , v))
+    var rhs : Expression = exp
+    var lhs : Expression = x
+    var temp : Expression = null
+    while(temp != lhs) {
+      temp = lhs
+      lhs match {
+
+        case Exponent(l , b) if !contains_a_var(b) => {
+          rhs = Radical(rhs, b)
+          lhs = l
+        }
+        case Operator(l  , Op(sign) , e) if !contains_a_var(l) => {
+          rhs = if(sign == "*") Fraction(calc.evaluate(rhs)  , calc.evaluate(e))
+          else if(sign == "/") Operator(calc.evaluate(rhs) , Op("*") , calc.evaluate(Negative(e)))
+          else if(sign == "+") Operator(calc.evaluate(rhs) , Op("-") , calc.evaluate(e))
+          else Operator(calc.evaluate(rhs) , Op("+") , calc.evaluate(e))
+          lhs = e
+        }
+        case Operator(e  , Op(sign) , l) if !contains_a_var(l) => {
+          rhs = if(sign == "*") Fraction(calc.evaluate(rhs)  , calc.evaluate(e))
+          else if(sign == "/") Operator(calc.evaluate(rhs) , Op("*") , calc.evaluate(Negative(e)))
+          else if(sign == "+") Operator(calc.evaluate(rhs) , Op("-") , calc.evaluate(e))
+          else Operator(calc.evaluate(rhs) , Op("+") , calc.evaluate(e))
+          lhs = e
+        }
+        case Fraction(l , r) if !contains_a_var(l) => {
+          rhs = calc.evaluate(l)
+          lhs = Operator(calc.evaluate(r) , Op("*") , calc.evaluate(lhs))
+        }
+
+
+        case _ => lhs = lhs;
+      }
+    }
+
+
+
+    def contains_a_var(v : Expression) : Boolean = {
+    v match {
+      case Operator(l , op , r) => contains_a_var(l) && contains_a_var(r)
+      case Fraction(t,b) => contains_a_var(t) && contains_a_var(b)
+      case Log(l , b) => contains_a_var(l)
+      case Sin(l) => contains_a_var(l)
+      case Cos(l) => contains_a_var(l)
+      case Tan(l) => contains_a_var(l)
+      case Exponent(l,b) => contains_a_var(l) && contains_a_var(b)
+      case Radical(l,r) => contains_a_var(l) && contains_a_var(r)
+      case Pi() => false
+      case Variable(l) => true
+      case Constant(l) => false
+
+    }
+  }
+    rhs
 
   }
 
@@ -207,7 +267,7 @@ case class Exponent(x : Expression , power : Expression) extends Expression {
 case class Radical(x : Expression , root : Expression = Constant(2)) extends Expression {
   override def toString: String = root.toString + "√(" + x.toString + ")"
 
-  override def value: Double = ???
+  override def value: Double = Math.pow(x.value , 1/root.value)
 
 
 }
