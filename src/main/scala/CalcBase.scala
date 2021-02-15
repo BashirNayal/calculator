@@ -44,9 +44,9 @@ abstract class CalcBase extends CALCULATOR {
   def parse(command : String) : Expression = {
 
     val parsed = parse_string(command)
-    println("Parsed :   " + parsed.mkString(" "))
+//    println("Parsed :   " + parsed.mkString(" "))
     val shunted = shunting_yard(parsed)
-    println("shunted :   " + shunted.mkString(" "))
+//    println("shunted :   " + shunted.mkString(" "))
     val RPN = turn_to_RPN(shunted)
     RPN
   }

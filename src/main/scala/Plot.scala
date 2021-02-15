@@ -24,15 +24,26 @@ class Plot(f : Fun) extends PApplet {
   override def draw(): Unit = {
     background(190)
     fill(128)
-    var origin : Point = Point(0,0)
+    var origin : Point = Point(width/2,height/2)
     draw_axis(origin.x , origin.y)
 
     draw_graph(f)
   }
   def draw_axis(x : Float , y : Float) {
-    line(width/2 + x , 0 , width/2 + x, height)
-    line(0 , height/2 - y , width , height / 2 - y) // minus because draw() has it's axis center at the top left
+    val center : Point = Point(x, y)
+//    line(width/2 + x , 0 , width/2 + x, height)
+    line(x , 0 ,  x, height)
+
+//    line(0 , height/2 - y , width , height / 2 - y) // minus because draw() has it's axis center at the top left
+      line(0 , y , width ,  y) // minus because draw() has it's axis center at the top left
+
+    for(i <- 0 to 20) {
+      circle(Point(center.x , 0 + i * height * 0.05f) , 4)
+      circle(Point(0 + i * width * 0.05f , center.y) , 4)
+
+    }
   }
+  def circle(p : Point , r : Float) = ellipse(p.x , p.y , r , r)
   def draw_graph(f : Fun): Unit = {
     var i = 0
     val max = 1000

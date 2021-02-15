@@ -63,6 +63,13 @@
             <li>f(x) = x - 3 + x ^2</li>
         </ul>
     </li>
+    <li>Functions
+        <ul>
+            <li>If variable, move it to the variables side</li>
+            <li>if operator, check sign. if sign is division or multiplication and one of the operand contains a variable. Move it to the variables side </li>
+            <li>if fraction and has a variable, move to variable side</li>
+        </ul>
+    </li>
     <li>Implement absolute</li>
     <li>alternative solution for trigonometry (degrees) </li>
     <li>plotting and functions
