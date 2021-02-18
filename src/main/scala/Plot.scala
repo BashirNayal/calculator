@@ -22,14 +22,26 @@ class Window(f : Fun) extends PApplet {
   override def mousePressed() : Unit = {
 //    exit()
   }
-
+  var origin : Point = Point(width/2,height/2)
   override def settings(): Unit = {
     size(800, 800)
-  }
+//    min_x = f.solve_for_y(Constant(0)).value
+//    min_y = f.solve_for_x(Constant(0)).value
+//    if(min_x <= 0 && f.solve_for_y(Constant(1)).value.isNaN) origin = Point(origin.x , width - 2)
+//    else if(min_x > 0 && f.solve_for_y(Constant(-1)).value.isNaN) origin = Point(origin.x , 2)
+//    if(min_y <= 0 && f.solve_for_x(Constant(1)).value.isNaN) origin = Point()
 
+
+  }
+  val x_scale : Float = 1
+  val y_scale : Float = 1
+  var min_x : Double = 0
+  var min_y : Double = 0
+  val axis_drawn : Boolean = false
   override def draw(): Unit = {
     background(190)
     fill(128)
+//    if(!axis_drawn) get_scale(f)
     val origin : Point = Point(width/2,height/2)
     draw_axis(origin.x , origin.y)
 
@@ -51,6 +63,9 @@ class Window(f : Fun) extends PApplet {
   }
   def circle(p : Point , r : Float): Unit = ellipse(p.x , p.y , r , r)
   def draw_graph(f : Fun): Unit = {
+    val x_scale = f.solve_for_x(Constant(0)).value
+    val y_scale = f.solve_for_y(Constant(0)).value
+
     fill(0)
     var i = 0
     val max = 1000

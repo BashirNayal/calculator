@@ -152,6 +152,7 @@ case class Log(x : Expression , base : Expression = Constant(10)) extends Expres
 }
 case class Ln(x : Expression) extends Expression {
   override def value: Double = Math.log10(x.value) / Math.log10(Euler().value)
+
   //    override def +(rhs : Expression) : Expression = {
   //      Ln(Constant(999))
   //    }
@@ -180,7 +181,6 @@ case class Fun(x : Expression , v : String) extends Expression {
     while(temp != lhs) {
       temp = lhs
       lhs match {
-
         case Exponent(l , b) if !contains_a_var(b) => {
           rhs = Radical(rhs, b)
           lhs = l
@@ -203,11 +203,29 @@ case class Fun(x : Expression , v : String) extends Expression {
           rhs = calc.evaluate(l)
           lhs = Operator(calc.evaluate(r) , Op("*") , calc.evaluate(lhs))
         }
-
-
-        case _ => lhs = lhs;
+        case Cos(x) if !contains_a_var(x) => {
+          rhs = Constant(Math.acos(rhs.value))
+          lhs = x
+        }
+        case Sin(x) if !contains_a_var(x) => {
+          rhs = Constant(Math.asin(rhs.value))
+          lhs = x
+        }
+        case Tan(x) if !contains_a_var(x) => {
+          rhs = Constant(Math.atan(rhs.value))
+          lhs = x
+        }
+        case Log(x , b) => {
+          rhs = Constant(Math.pow(b.value , x.value))
+          lhs = x
+        }
+        case Ln(x) => {
+          rhs = Constant(Math.pow(Euler().value , x.value))
+        }
+        case _ => lhs = lhs
       }
     }
+    //b^x = 8 =>
 
 
 

@@ -70,9 +70,11 @@ class CalcBase extends CALCULATOR {
       case Cos(x) => Cos(evaluate(x))
       case Tan(x) => Tan(evaluate(x))
       case Ln(x) if x.isInstanceOf[Euler] => Constant(1)
+      case Ln(x) => Ln(evaluate(x))
       case Log(x,y) if y.isInstanceOf[Euler] => Ln(x)
       case Log(x,y) => Log(evaluate(x) , evaluate(y))
       case Variable(x) if variables.contains(x) => variables(x)
+
 
       case Operator(Negative(x) , op , Negative(y)) if  op.s == "*" || op.s == "/" => Operator(x , op , y)
       case Fraction(Negative(x) , Negative(y)) => Fraction(x , y)
