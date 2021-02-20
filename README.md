@@ -57,6 +57,7 @@
             <td>x = log(2)</td>
             <td></td>
         </tr>
+        <tr>
             <td>functions</td>
             <td>&lt;one letter name&gt;(&lt;var name&gt;) = expression)</td>
             <td>f(x) = log(x)</td>
@@ -87,5 +88,9 @@ These operations are valid:<br>
 <li>f(x) = g(x)</li>
 <li>f(x) = new mapping (this would just solve for y)</li>
 </ul>
-    
+<h3>example plots</h3>
+<h4>-x^2</h4>
+<img src="img/-x^2.png">
+<h4>log(x) * 10</h4>
+<img src="img/10 log(x).png">
 
