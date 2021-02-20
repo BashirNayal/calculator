@@ -1,9 +1,13 @@
 <h1>calculator</h1>
 <p>
-    description of the code
+    This is a calculator that can parse a mathematical expression, turn it into a tree
+    and do operations on it(simplify, calculate, etc...).
+    It can also store user assigned variables. Variables can be values or a whole expression with other variables.<br>
+    Functions are also supported. A user can assign an expression to a function, and solve for a specific x or y.
+    Functions can also be plotted using a minimal processing window that shows the shape of the function. 
 </p>
 
-<h2>Syntax</h2>
+<h2>How to use</h2>
 <table>
         <tr>
             <th>expression</th>
@@ -48,17 +52,29 @@
             <td></td>
         </tr>
         <tr>
+            <td>variables</td>
+            <td>&lt;var name&gt; =</td>
+            <td>x = log(2)</td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        </tr>
+            <td>functions</td>
+            <td>&lt;one letter name&gt;(&lt;var name&gt;) = expression)</td>
+            <td>f(x) = log(x)</td>
+            <td>for more info about functions, click <a href="#functions">here</a></td>
         </tr>
 
 </table>
+<h4 id="functions">Functions</h4>
+<p>
+Functions can be used to solve for some x, some y or to be plotted
+    suppose we have
+    
+</p>
 <h3>TODO</h3>
 <ul>
     <li>Fix:
         <ul>
+            <li>parse everything inside parentheses recursively</li>
             <li>f(x) = (x/2)^2</li>
             <li>f(x) = x - 3 + x ^2</li>
         </ul>

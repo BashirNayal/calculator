@@ -93,7 +93,7 @@ object Parsers {
         res = res :+ Pi()
         current += 1
       }
-      else if(isMathematicalConstruct(s.slice(current , s.length - 1))) {////***************////
+      else if(isMathematicalConstruct(s.slice(current , s.length - 1))) {
         expecting_operand = false
 
         val expression_name = get_expression_name(s.slice(current , s.length - 1))
@@ -154,7 +154,6 @@ object Parsers {
           else if (s(current) == '*') res = res :+ Op("*")
           else if (s(current) == '^') is_exponent = true
           expecting_operand = true
-
         }
       }
       else if (s(current) == 'e') res = res :+ Euler()
@@ -166,7 +165,6 @@ object Parsers {
       current += 1
     }
     res.toArray
-
   }
   def extract_variable_name(s : String) : String = {
     var count = 0

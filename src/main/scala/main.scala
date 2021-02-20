@@ -1,9 +1,6 @@
 package calculator
 
-import processing.core.PApplet
-
 object main {
-
 
 
   def main(args: Array[String]) {
@@ -12,4 +9,3 @@ object main {
     calc.run()
   }
 }
-//added a comment

@@ -5,13 +5,16 @@ class CalcBase extends CALCULATOR {
   var variables : Map[String , Expression] = Map()
   var functions : Map[String , Fun] = Map()
 
-  def parse_function(s : String) = {
-
-  }
   override def readEval(command: String): String = {
     try {
       command match {
-        case x if x.length > 1 && x(0).isLetter && x(1) == '(' => {
+        case x if x.startsWith("plot") =>
+          val fun_name : String = x.split(" ")(1)(0).toString
+          if(functions.contains(fun_name)) Plot.plot(functions(fun_name))
+          else return "There is no function " + x.split(" ")(1)(0)
+          ""
+
+        case x if x.length > 1 && x(0).isLetter && x(1) == '(' =>
           val arg   = extractArgument(x.slice(1 , x.length))
           val arg_expression = parse(arg._1)
           if(command.contains("=")) {
@@ -19,29 +22,25 @@ class CalcBase extends CALCULATOR {
               functions += (command(0).toString -> Fun(parse(command.split("=")(1)) , command(2).toString))
             else return command(2).toString + " = " + functions(command(0).toString).solve_for_y(parse(command.split("=")(1))).toString +
               " = " + functions(command(0).toString).solve_for_y(parse(command.split("=")(1))).value.toString
-
-            Plot.plot(functions(command(0).toString))
             ""
           }
           else {
             command(0).toString + "(" + arg_expression.toString + ") = " +
-            functions(command(0).toString).solve_for_x(evaluate(arg_expression)).toString + " = " +
             functions(command(0).toString).solve_for_x(evaluate(arg_expression)).value.toString
           }
-        }
-        case x if x.contains("=") => {
+
+        case x if x.contains("=") =>
           variables += (x.split("=")(0).filterNot(_ == ' ') -> parse(x.split("=")(1)))
           ""
-        }
-        case _ => {
+
+        case _ =>
           val RPN = parse(command)
           evaluate(RPN).toString + " => " + evaluate(RPN).value.toString
-        }
+
       }
     }
   }
   def parse(command : String) : Expression = {
-
     val parsed = parse_string(command)
 //    println("Parsed :   " + parsed.mkString(" "))
     val shunted = shunting_yard(parsed)
@@ -62,10 +61,8 @@ class CalcBase extends CALCULATOR {
 
   }
   def eval(exp : Expression) : Expression = {
-    var temp : Expression = null
-
     exp match {
-      case Radical(Constant(0) , b) => Constant(0)
+      case Radical(Constant(0) , _) => Constant(0)
       case Sin(x) => Sin(evaluate(x))
       case Cos(x) => Cos(evaluate(x))
       case Tan(x) => Tan(evaluate(x))
@@ -102,21 +99,5 @@ class CalcBase extends CALCULATOR {
 
     }
   }
-
-  //TODO  case class REPL_Variable(s : String)
-
-  def can_do_operation[A <: Expression, B <: Expression](lhs : A  , op : Op ,  rhs : B) : Boolean = {
-    rhs match {
-      case x : Constant => lhs match {
-        case y : Constant => true
-        case _ => false
-      }
-      case x  if x.getClass == lhs.getClass => true
-      case _ => false
-    }
-  }
-
-
-
 
 }

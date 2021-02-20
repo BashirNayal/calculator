@@ -4,7 +4,6 @@ import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutp
 
 object Window {
   def main(args: Array[String] ) {
-//    plot(Fun(Operator(Constant(3) , Op("*") , Variable("x")), "x"))
     draw(Plot.deserialize())
   }
   def draw(f : Fun): Unit = {
@@ -15,23 +14,11 @@ object Window {
 }
 class Window(f : Fun) extends PApplet {
 
-  override def setup(): Unit = {
-//    println(args.mkString(" "))
-  }
 
-  override def mousePressed() : Unit = {
-//    exit()
-  }
+
   var origin : Point = Point(width/2,height/2)
   override def settings(): Unit = {
     size(800, 800)
-//    min_x = f.solve_for_y(Constant(0)).value
-//    min_y = f.solve_for_x(Constant(0)).value
-//    if(min_x <= 0 && f.solve_for_y(Constant(1)).value.isNaN) origin = Point(origin.x , width - 2)
-//    else if(min_x > 0 && f.solve_for_y(Constant(-1)).value.isNaN) origin = Point(origin.x , 2)
-//    if(min_y <= 0 && f.solve_for_x(Constant(1)).value.isNaN) origin = Point()
-
-
   }
   val x_scale : Float = 1
   val y_scale : Float = 1
@@ -41,7 +28,6 @@ class Window(f : Fun) extends PApplet {
   override def draw(): Unit = {
     background(190)
     fill(128)
-//    if(!axis_drawn) get_scale(f)
     val origin : Point = Point(width/2,height/2)
     draw_axis(origin.x , origin.y)
 
@@ -49,10 +35,8 @@ class Window(f : Fun) extends PApplet {
   }
   def draw_axis(x : Float , y : Float) {
     val center : Point = Point(x, y)
-//    line(width/2 + x , 0 , width/2 + x, height)
     line(x , 0 ,  x, height)
 
-//    line(0 , height/2 - y , width , height / 2 - y) // minus because draw() has it's axis center at the top left
       line(0 , y , width ,  y) // minus because draw() has it's axis center at the top left
 
     for(i <- 0 to 20) {
@@ -63,8 +47,6 @@ class Window(f : Fun) extends PApplet {
   }
   def circle(p : Point , r : Float): Unit = ellipse(p.x , p.y , r , r)
   def draw_graph(f : Fun): Unit = {
-    val x_scale = f.solve_for_x(Constant(0)).value
-    val y_scale = f.solve_for_y(Constant(0)).value
 
     fill(0)
     var i = 0
@@ -76,10 +58,8 @@ class Window(f : Fun) extends PApplet {
       i += 1
       x += 1
     }
-    arr = arr.map(p => Point(p.x*10 + width/2,  height / 2 - p.y*20))
-//    for(i <- 0 until arr.length - 1) println(arr(i))
+    arr = arr.map(p => Point(p.x*10 + width/2,  height / 2 - p.y*10))
     for(i <- 0 until arr.length - 1) line(arr(i).x , arr(i).y , arr(i + 1).x , arr(i + 1).y)
-//    for(i <- 0 until arr.length - 1) rect(arr(i).x , arr(i).y , 2 , 2)
   }
 
 
