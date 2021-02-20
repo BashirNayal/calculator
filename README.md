@@ -74,7 +74,7 @@
 <h4 id="functions">Functions</h4>
 <p>
 Functions can be used to solve for some x, some y or to be plotted. <br>
-suppose we have the function f(x) = x + 10
+suppose we have the function f(x) = x + 10<br>
 These operations are valid:<br>
 </p>
 <ul>
@@ -82,7 +82,7 @@ These operations are valid:<br>
 <li>f(x) = 2</li>
 <li>plot f(x)</li>
 </ul>
-<p>These operation are <b>not</b> valid:<br></p>
+<p>These operations are <b>not</b> valid:<br></p>
 <ul>
 <li>f(h(x))</li>
 <li>f(x) = g(x)</li>
