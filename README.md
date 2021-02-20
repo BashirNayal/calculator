@@ -62,39 +62,30 @@
             <td>f(x) = log(x)</td>
             <td>for more info about functions, click <a href="#functions">here</a></td>
         </tr>
+        <tr>
+            <td>plotting a function</td>
+            <td>plot &lt;one letter name&gt;(&lt;var name&gt;)</td>
+            <td>plot f(x)</td>
+            <td></td>
+        </tr>
 
 </table>
 <h4 id="functions">Functions</h4>
 <p>
-Functions can be used to solve for some x, some y or to be plotted
-    suppose we have
-    
+Functions can be used to solve for some x, some y or to be plotted. <br>
+suppose we have the function f(x) = x + 10
+These operations are valid:<br>
 </p>
-<h3>TODO</h3>
 <ul>
-    <li>Fix:
-        <ul>
-            <li>parse everything inside parentheses recursively</li>
-            <li>f(x) = (x/2)^2</li>
-            <li>f(x) = x - 3 + x ^2</li>
-        </ul>
-    </li>
-    <li>Functions
-        <ul>
-            <li>If variable, move it to the variables side</li>
-            <li>if operator, check sign. if sign is division or multiplication and one of the operand contains a variable. Move it to the variables side </li>
-            <li>if fraction and has a variable, move to variable side</li>
-        </ul>
-    </li>
-    <li>Implement absolute</li>
-    <li>alternative solution for trigonometry (degrees) </li>
-    <li>plotting and functions
-        <ul>
-            <li>Calculate the domain</li>
-            <li>calculate the range</li>
-            <li>calculate the root</li>
-            <li>scale the graph accordingly</li>
-        </ul>
-    </li>
+<li>f(2)</li>
+<li>f(x) = 2</li>
+<li>plot f(x)</li>
 </ul>
+<p>These operation are <b>not</b> valid:<br></p>
+<ul>
+<li>f(h(x))</li>
+<li>f(x) = g(x)</li>
+<li>f(x) = new mapping (this would just solve for y)</li>
+</ul>
+    
 
